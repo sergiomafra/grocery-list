@@ -15,3 +15,6 @@ RUN pip install -r requirements.txt
 
 # Copy API to container
 COPY . /srv/api/
+
+# Run entrypoint.sh
+ENTRYPOINT ["/srv/api/entrypoint.sh"]
