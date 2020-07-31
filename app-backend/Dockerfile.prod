@@ -1,0 +1,68 @@
+###########
+# BUILDER #
+###########
+
+# Pull Python3.8 image from Docker HUB
+FROM python:3.8.5-slim-buster as builder
+
+# Work directory
+WORKDIR /srv/api
+
+# Environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+# Lint
+RUN pip install --upgrade pip
+RUN pip install flake8
+COPY . /srv/api
+RUN flake8 --ignore=E501,F401 .
+
+# Install python dependencies
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /srv/api/wheels -r requirements.txt
+
+#########
+# FINAL #
+#########
+
+# Pull Python3.8 image from Docker HUB
+FROM python:3.8.5-slim-buster
+
+# Home folder for the API user
+RUN mkdir -p /home/api
+
+# Create the API user
+RUN addgroup --system api && adduser --system api && adduser api api
+
+# Create the appropriate directories
+ENV HOME=/home/api
+ENV API_HOME=/home/api/backend
+RUN mkdir $API_HOME
+WORKDIR $API_HOME
+
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends netcat
+COPY --from=builder /srv/api/wheels /wheels
+COPY --from=builder /srv/api/requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+
+# Copy entrypoint.sh
+COPY ./entrypoint.sh $API_HOME
+
+# Copy backend
+COPY . $API_HOME
+
+# chown all the files to the app user
+RUN chown -R api:api $API_HOME
+
+# change to the app user
+USER api
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/api/backend/entrypoint.sh"]

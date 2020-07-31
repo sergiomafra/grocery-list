@@ -5,7 +5,7 @@ services:
     image: postgres:12-alpine
     restart: always
     env_file:
-      - .db-prod.env
+      - .db-dev.env
     ports:
       - "4445:5432"
     volumes:
@@ -26,14 +26,14 @@ services:
       - db-net
 
   backend:
-    build:
-      context: ./app-backend
-      dockerfile: Dockerfile.prod
-    command: gunicorn --bind 0.0.0.0:5000 manage:app
+    build: ./app-backend
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./app-backend/:/srv/api/
     ports:
       - 5000:5000
     env_file:
-      - .backend-prod.env
+      - .backend-dev.env
     depends_on:
       - db
 
