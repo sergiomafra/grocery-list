@@ -26,3 +26,23 @@ To build a portfolio application utilizing a predefined stack
 - **Tests**: pytest/unittest
 - **Frontend Main Language:** JavaScript
 - **Frontend Framework:** Vue.js
+
+## Installation
+1) Docker should be installed on the system. Follow the instructions on this page:\
+https://docs.docker.com/get-docker/
+2) Next, docker-compose should also be installed. docker-compose set up:\
+https://docs.docker.com/compose/install/
+3) Now, run the following code o terminal:
+
+    `$ cd /path/to/installation/directory`
+
+    *then*
+
+    `$ git clone https://github.com/sergiomafra/grocery-list`\
+    `$ cd grocery-list`\
+    `$ docker-compose build`\
+    `$ docker-compose up`
+
+    *or*
+
+    `$ chmod a+x install.sh & ./install.sh`
