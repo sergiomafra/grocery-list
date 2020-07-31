@@ -1,11 +1,11 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
     image: postgres:12-alpine
     restart: always
     env_file:
-      - db.env
+      - .db.env
     ports:
       - "4445:5432"
     volumes:
@@ -15,14 +15,25 @@ services:
 
   db-admin:
     image: dpage/pgadmin4
+    restart: always
     env_file:
-      - db-admin.env
+      - .db-admin.env
     ports:
       - "4446:80"
     depends_on:
       - db
     networks:
       - db-net
+
+  backend:
+    build: ./app-backend
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./app-backend/:/srv/api/
+    ports:
+      - 5000:5000
+    env_file:
+      - .backend-dev.env
 
 volumes:
   db-data:
