@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:12-alpine
+    restart: always
+    env_file:
+      - .db-prod.env
+    ports:
+      - "4445:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    networks:
+      - db-net
+
+  db-admin:
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .db-admin.env
+    ports:
+      - "4446:80"
+    depends_on:
+      - db
+    networks:
+      - db-net
+
+  backend:
+    build:
+      context: ./app-backend
+      dockerfile: Dockerfile.prod
+    command: gunicorn --bind 0.0.0.0:5000 manage:app
+    expose:
+      - 5000
+    env_file:
+      - .backend-prod.env
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./app-frontend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - frontend-data:/srv/app/dist
+
+  webserver:
+    build: ./app-webserver
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - frontend-data:/usr/share/nginx/html
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  db-data:
+  frontend-data:
+
+networks:
+  db-net:
+    driver: bridge
