@@ -2,7 +2,7 @@
 Web app to build a grocery list
 
 ## Main GOAL
-To build a portfolio application utilizing a predefined stack
+To build a portfolio application with a predefined stack
 
 ## Features / Goals
 - CRUD of grocery items
@@ -18,31 +18,41 @@ To build a portfolio application utilizing a predefined stack
 - **Branch naming convention:** git-flow
 - **Containerization:** Docker & docker-compose
 - **Database:** PostgreSQL
-
-## Techs to be implemented
+- **Web server:** NGINX
+- **WSGI HTTP Server:** Gunicorn
 - **Backend Main Language:** Python3
 - **API Framework:** Flask & Flask Plugins
-- **Database manipulation**: SQLAlchemy
-- **Tests**: pytest/unittest
+- **Database manipulation**: SQLAlchemy, Migrate
 - **Frontend Main Language:** JavaScript
 - **Frontend Framework:** Vue.js
 
+## Techs to be implemented
+- **Tests**: pytest/unittest
+
 ## Installation
-1) Docker should be installed on the system. Follow the instructions on this page:\
-https://docs.docker.com/get-docker/
-2) Next, docker-compose should also be installed. docker-compose set up:\
-https://docs.docker.com/compose/install/
-3) Now, run the following code o terminal:
+First, be sure that the ports 80 and 8080 are not being used. If they are being used by other applications, change the docker-compose.yml file to map those ports to another.\
 
-    `$ cd /path/to/installation/directory`
+Now, we need to make sure some dependencies are installed on the system: Docker and docker-compose. Follow the instructions on this page:\
+Docker: https://docs.docker.com/get-docker/\
+docker-compose: https://docs.docker.com/compose/install/
 
-    *then*
+Finally, run the following code o terminal to install the app:
 
-    `$ git clone https://github.com/sergiomafra/grocery-list`\
-    `$ cd grocery-list`\
-    `$ docker-compose build`\
-    `$ docker-compose up`
+    $ cd /path/to/installation/directory
 
-    *or*
+*then*
 
-    `$ chmod a+x install.sh & ./install.sh`
+    $ git clone https://github.com/sergiomafra/grocery-list
+    $ cd grocery-list
+    $ docker-compose build
+
+*or*
+
+    $ chmod a+x install.sh & ./install.sh
+
+## Run the app
+    $ docker-compose up -d
+
+## Application
+APP: http://localhost:80\
+API: http://localhost:8080

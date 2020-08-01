@@ -37,15 +37,27 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./app-frontend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - frontend-data:/srv/app/dist
+
   webserver:
     build: ./app-webserver
     ports:
-      - 8080:80
+      - 80:80
+      - 8080:8080
+    volumes:
+      - frontend-data:/usr/share/nginx/html
     depends_on:
       - backend
+      - frontend
 
 volumes:
   db-data:
+  frontend-data:
 
 networks:
   db-net:
