@@ -1,2 +1,2 @@
-# grocery-list
-Web app to build a grocery list
+# Tomalist
+Responsive Web App to build grocery lists
